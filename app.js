@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { checkRole } from "./middleware/authMiddleware.js";
 import createTransactionController from "./routes/transactionRoutes.js";
+import saveBuyAssetsController from "./routes/transactionRoutes.js";
 import { checkEmail } from "./controllers/authController.js";
 import authRoutes from "./routes/authRoutes.js";
 import assetRoutes from "./routes/assetRoutes.js";
@@ -20,7 +21,6 @@ import removeCart from "./routes/removeCartRoutes.js"
 const app = express();
 const port = 5000;
 
-// Menangani kesalahan (opsional, untuk penanganan kesalahan yang lebih baik)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.setHeader(
@@ -34,10 +34,10 @@ app.use((err, req, res, next) => {
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173" }));
 
-// Gunakan rute
 app.use("/api/users", userRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api", createTransactionController);
+app.use("/api", saveBuyAssetsController);
 app.use("/api/users", authRoutes);
 app.use("/api/assets", assetRoutes);
 app.use("/api/carts", cartRoutes);
@@ -50,18 +50,17 @@ app.use("/api", revenueRoutes);
 app.use("/api", myAssetRoutes);
 
 
-// Route for welcome message
 app.get("/", (req, res) => {
-  res.send("Welcome BE");
+  res.send("Welcome Back End Asset Market IPPL!");
 });
 
-// Menangani kesalahan (opsional, untuk penanganan kesalahan yang lebih baik)
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong!");
 });
 
-// Start server
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
