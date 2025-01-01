@@ -17,9 +17,10 @@ import myAssetRoutes from "./routes/myAssetRoutes.js";
 import moveAsset from "./routes/moveRoutes.js";
 import revenueRoutes from "./routes/revenueRoutes.js";
 import removeCart from "./routes/removeCartRoutes.js"
+import fetch from "node-fetch";
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -52,6 +53,29 @@ app.use("/api", myAssetRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome Back End Asset Market IPPL!");
+});
+
+
+app.get("/api/proxy-file", async (req, res) => {
+  const fileUrl = req.query.url;
+
+  try {
+    if (!fileUrl) {
+      return res.status(400).send("File URL is required.");
+    }
+
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      return res.status(response.status).send(`Failed to fetch file: ${response.statusText}`);
+    }
+
+    res.set("Content-Type", response.headers.get("content-type"));
+    response.body.pipe(res);
+
+  } catch (error) {
+    console.error("Error proxying file:", error);
+    res.status(500).send("Internal Server Error.");
+  }
 });
 
 
