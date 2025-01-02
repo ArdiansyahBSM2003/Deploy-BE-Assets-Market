@@ -34,6 +34,7 @@ app.use((err, req, res, next) => {
 
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "https://my-asset.vercel.app" }));
 
 app.use("/api/users", userRoutes);
 app.use("/api/admins", adminRoutes);
